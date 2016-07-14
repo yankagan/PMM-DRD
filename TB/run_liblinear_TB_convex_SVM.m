@@ -9,17 +9,9 @@ log10_l_min = -13;
 log10_l_max = 13; 
 num_l = log10_l_max - log10_l_min + 1;
 
-fprintf('Runing Liblinear for SVM \n');
+fprintf('Running Liblinear for SVM \n');
 
 load TB_dataset_hiv_class.mat y_train X_train y_val X_val y_test X_test
-
-log10_lam_range = linspace(log10_l_min, log10_l_max, num_l);   
-
-n_param = numel(log10_lam_range);
-
-cv_acc = NaN(n_param, 1);
-
-lam_range = 10.^log10_lam_range;   % Range of lambda values
 
 tol_opt = 1e-4;
 
@@ -31,9 +23,18 @@ t = tic;
 model = train([y_train; y_val], [X_train; X_val], options_liblin);
 train_time = toc(t);
 
-% Classify test data
-[pred_label, acc_vec, ~] = predict(y_test, X_test, model);
-acc = acc_vec(1);
+% Classification accuracy on training data
+fprintf('Training ');
+[pred_label, acc_vec, ~] = predict(y_train, X_train, model);
+acc_train = acc_vec(1);
 
-save results_TB_convex_svm lam_best model pred_label acc train_time
+
+% Classification accuracy on test data
+fprintf('Test ');
+[pred_label, acc_vec, ~] = predict(y_test, X_test, model);
+acc_test = acc_vec(1);
+
+
+
+save results_TB_convex_svm acc_test acc_train 
 

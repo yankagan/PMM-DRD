@@ -20,7 +20,6 @@ n = size(X_train, 1);
 
 % Append a vector of 1s to X_train for the bias term  
 X_train = [X_train, ones(n, 1)];
-
 p = size(X_train, 2);
  
 % To be used for initialization 
@@ -97,137 +96,100 @@ fprintf('------------------------------------------------- \n');
 % Trust Region
 disp('Starting PMM ...');
 options.display = 0;
-[theta_opt_pmm_cg, obj_hist_pmm_cg, time_elapsed_pmm_cg, acc_hist_pmm_cg] = ...
-    nonconvex_svm_PMM_CG(X_train, y_train, theta_0, lambda, sc, num_grp, param_ord, c_f, i_f, options, X_test, y_test);
+[theta_opt_pmm_cg, obj_hist_pmm_cg, time_elapsed_pmm_cg] = ...
+    nonconvex_svm_PMM_CG(X_train, y_train, theta_0, lambda, sc, num_grp, param_ord, c_f, i_f, options);
 acc_test_pmm_cg = linear_classification_accuracy(X_test, y_test, theta_opt_pmm_cg);
-theta_opt_pmm_cg_CELL{ind_init}=theta_opt_pmm_cg;
-obj_hist_pmm_cg_CELL{ind_init}=obj_hist_pmm_cg;
-time_elapsed_pmm_cg_CELL{ind_init}=time_elapsed_pmm_cg;
-acc_hist_pmm_cg_CELL{ind_init}=acc_hist_pmm_cg;
+acc_train_pmm_cg = linear_classification_accuracy(X_train(:,1:end-1), y_train, theta_opt_pmm_cg);
+acc_train_pmm_cg_CELL{ind_init}=acc_train_pmm_cg;
 acc_test_pmm_cg_CELL{ind_init}=acc_test_pmm_cg;
-fprintf('Test Accuracy for PMM was %f (percent) \n',acc_test_pmm_cg_CELL{ind_init});
+fprintf('Training/Test Accuracy for PMM was %f/%f (percent) \n',acc_train_pmm_cg, acc_test_pmm_cg);
 fprintf('------------------------------------------------- \n');
 
 
 %%%%% L-BFGS %%%%
 disp('Starting LBFGS ...');
-[theta_opt_lbfgs, obj_hist_lbfgs, time_elapsed_lbfgs, acc_hist_lbfgs] = ...
-    nonconvex_svm_LBFGS(X_train, y_train, theta_0, lambda, sc, options, X_test, y_test);
+[theta_opt_lbfgs, obj_hist_lbfgs, time_elapsed_lbfgs] = nonconvex_svm_LBFGS(X_train, y_train, theta_0, lambda, sc, options);
 acc_test_lbfgs = linear_classification_accuracy(X_test, y_test, theta_opt_lbfgs);
-theta_opt_lbfgs_CELL{ind_init}=theta_opt_lbfgs;
-obj_hist_lbfgs_CELL{ind_init}=obj_hist_lbfgs;
-time_elapsed_lbfgs_CELL{ind_init}=time_elapsed_lbfgs;
-acc_hist_lbfgs_CELL{ind_init}=acc_hist_lbfgs;
+acc_train_lbfgs = linear_classification_accuracy(X_train(:,1:end-1), y_train, theta_opt_lbfgs);
+acc_train_lbfgs_CELL{ind_init}=acc_train_lbfgs;
 acc_test_lbfgs_CELL{ind_init}=acc_test_lbfgs;
-fprintf('Test Accuracy for LBFGS was %f (percent) \n',acc_test_lbfgs_CELL{ind_init});
+fprintf('Training/Test Accuracy for LBFGS was %f/%f (percent) \n',acc_train_lbfgs, acc_test_lbfgs);
 fprintf('------------------------------------------------- \n');
 
 %%%% Non-linear CG %%%%
 disp('Starting CG ...');
-[theta_opt_cg, obj_hist_cg, time_elapsed_cg, acc_hist_cg] = ...
-    nonconvex_svm_CG(X_train, y_train, theta_0, lambda, sc, options, X_test, y_test);
+[theta_opt_cg, obj_hist_cg, time_elapsed_cg] =  nonconvex_svm_CG(X_train, y_train, theta_0, lambda, sc, options);
 acc_test_cg = linear_classification_accuracy(X_test, y_test, theta_opt_cg);
-theta_opt_cg_CELL{ind_init}=theta_opt_cg;
-obj_hist_cg_CELL{ind_init}=obj_hist_cg;
-time_elapsed_cg_CELL{ind_init}=time_elapsed_cg;
-acc_hist_cg_CELL{ind_init}=acc_hist_cg;
+acc_train_cg = linear_classification_accuracy(X_train(:,1:end-1), y_train, theta_opt_cg);
+acc_train_cg_CELL{ind_init}=acc_train_cg;
 acc_test_cg_CELL{ind_init}=acc_test_cg;
-fprintf('Test Accuracy for CG was %f (percent) \n',acc_test_cg_CELL{ind_init});
+fprintf('Training/Test Accuracy for CG was %f/%f (percent) \n',acc_train_cg, acc_test_cg);
 fprintf('------------------------------------------------- \n');
 
 %%%%% PSCA %%%%
 options.display = 0;
 disp('Starting PSCA ...');
-[theta_opt_psca, obj_hist_psca, time_elapsed_psca, acc_hist_psca] = ...
-    nonconvex_svm_PSCA(X_train, y_train, theta_0, lambda, sc, n_proc, n_blks_per_proc, options, X_test, y_test);
+[theta_opt_psca, obj_hist_psca, time_elapsed_psca] = nonconvex_svm_PSCA(X_train, y_train, theta_0, lambda, sc, n_proc, n_blks_per_proc, options);
 acc_test_psca = linear_classification_accuracy(X_test, y_test, theta_opt_psca);
-theta_opt_psca_CELL{ind_init}=theta_opt_psca;
-obj_hist_psca_CELL{ind_init}=obj_hist_psca;
-time_elapsed_psca_CELL{ind_init}=time_elapsed_psca;
-acc_hist_psca_CELL{ind_init}=acc_hist_psca;
+acc_train_psca = linear_classification_accuracy(X_train(:,1:end-1), y_train, theta_opt_psca);
+acc_train_psca_CELL{ind_init}=acc_train_psca;
 acc_test_psca_CELL{ind_init}=acc_test_psca;
-fprintf('Test Accuracy for PSCA was %f (percent) \n',acc_test_psca_CELL{ind_init});
+fprintf('Training/Test Accuracy for PSCA was %f/%f (percent) \n',acc_train_psca, acc_test_psca);
 fprintf('------------------------------------------------- \n');
 
 %%%%%% GD %%%%%
 disp('Starting GD ..');
-[theta_opt_gd, obj_hist_gd, time_elapsed_gd, acc_hist_gd] = ...
-    nonconvex_svm_GD(X_train, y_train, theta_0, lambda, sc, options, X_test, y_test);
+[theta_opt_gd, obj_hist_gd, time_elapsed_gd] = nonconvex_svm_GD(X_train, y_train, theta_0, lambda, sc, options);
 acc_test_gd = linear_classification_accuracy(X_test, y_test, theta_opt_gd);
-theta_opt_gd_CELL{ind_init}=theta_opt_gd;
-obj_hist_gd_CELL{ind_init}=obj_hist_gd;
-time_elapsed_gd_CELL{ind_init}=time_elapsed_gd;
-acc_hist_gd_CELL{ind_init}=acc_hist_gd;
+acc_train_gd = linear_classification_accuracy(X_train(:,1:end-1), y_train, theta_opt_gd);
+acc_train_gd_CELL{ind_init}=acc_train_gd;
 acc_test_gd_CELL{ind_init}=acc_test_gd;
-fprintf('Test Accuracy for GD was %f (percent) \n',acc_test_gd_CELL{ind_init});
+fprintf('Training/Test Accuracy for GD was %f/%f (percent) \n',acc_train_gd, acc_test_gd);
 fprintf('------------------------------------------------- \n');
 
 
 %%%%%% AdaGrad %%%%%% 
 disp('Starting Adagrad ...');
-[theta_opt_adagrad, obj_hist_adagrad, time_elapsed_adagrad, acc_hist_adagrad] = ...
-    nonconvex_svm_mSGD_ADAgrad(X_train, y_train, theta_0, lambda, sc, options, X_test, y_test);
+[theta_opt_adagrad, obj_hist_adagrad, time_elapsed_adagrad] = nonconvex_svm_mSGD_ADAgrad(X_train, y_train, theta_0, lambda, sc, options);
 acc_test_adagrad = linear_classification_accuracy(X_test, y_test, theta_opt_adagrad);
-theta_opt_adagrad_CELL{ind_init}=theta_opt_adagrad;
-obj_hist_adagrad_CELL{ind_init}=obj_hist_adagrad;
-time_elapsed_adagrad_CELL{ind_init}=time_elapsed_adagrad;
-acc_hist_adagrad_CELL{ind_init}=acc_hist_adagrad;
+acc_train_adagrad = linear_classification_accuracy(X_train(:,1:end-1), y_train, theta_opt_adagrad);
+acc_train_adagrad_CELL{ind_init}=acc_train_adagrad;
 acc_test_adagrad_CELL{ind_init}=acc_test_adagrad;
-fprintf('Test Accuracy for AdaGrad was %f (percent) \n',acc_test_adagrad_CELL{ind_init});
+fprintf('Training/Test Accuracy for AdaGrad was %f/%f (percent) \n',acc_train_adagrad, acc_test_adagrad);
 fprintf('------------------------------------------------- \n');
 
 %%%%%% RMSProp %%%%%
 disp('Starting RMSProp ...');
-[theta_opt_rmsprop, obj_hist_rmsprop, time_elapsed_rmsprop, acc_hist_rmsprop] = ...
-    nonconvex_svm_mSGD_RMSprop(X_train, y_train, theta_0, lambda, sc, options, X_test, y_test);
+[theta_opt_rmsprop, obj_hist_rmsprop, time_elapsed_rmsprop] = nonconvex_svm_mSGD_RMSprop(X_train, y_train, theta_0, lambda, sc, options);
 acc_test_rmsprop = linear_classification_accuracy(X_test, y_test, theta_opt_rmsprop);
-theta_opt_rmsprop_CELL{ind_init}=theta_opt_rmsprop;
-obj_hist_rmsprop_CELL{ind_init}=obj_hist_rmsprop;
-time_elapsed_rmsprop_CELL{ind_init}=time_elapsed_rmsprop;
-acc_hist_rmsprop_CELL{ind_init}=acc_hist_rmsprop;
+acc_train_rmsprop = linear_classification_accuracy(X_train(:,1:end-1), y_train, theta_opt_rmsprop);
+acc_train_rmsprop_CELL{ind_init}=acc_train_rmsprop;
 acc_test_rmsprop_CELL{ind_init}=acc_test_rmsprop;
-fprintf('Test Accuract for RMSProp was %f (percent) \n',acc_test_rmsprop_CELL{ind_init});
+fprintf('Training/Test Accuracy for RMSProp was %f/%f (percent) \n',acc_train_rmsprop, acc_test_rmsprop);
 fprintf('------------------------------------------------- \n');
 
 %%%%%% SAVE RESULTS %%%%%%%%%%
 save results_TB_nonconvex_SVM ...
     ...
-    theta_opt_pmm_cg_CELL ...
-    obj_hist_pmm_cg_CELL ... 
-    time_elapsed_pmm_cg_CELL ...
-    acc_hist_pmm_cg_CELL ...
+    acc_train_pmm_cg_CELL ...
     acc_test_pmm_cg_CELL ...
     ...
-    theta_opt_lbfgs_CELL obj_hist_lbfgs_CELL ...
-    time_elapsed_lbfgs_CELL ...
-    acc_hist_lbfgs_CELL ...
+    acc_train_lbfgs_CELL ...
     acc_test_lbfgs_CELL ...
     ...
-    theta_opt_cg_CELL obj_hist_cg_CELL ...
-    time_elapsed_cg_CELL acc_hist_cg_CELL ...
+    acc_train_cg_CELL ...
     acc_test_cg_CELL ...
-    theta_opt_psca_CELL ...
-    obj_hist_psca_CELL ...
-    time_elapsed_psca_CELL ...
-    acc_hist_psca_CELL ... 
+    ...
+    acc_train_psca_CELL ...
     acc_test_psca_CELL ...
     ...
-    theta_opt_gd_CELL ... 
-    obj_hist_gd_CELL ...
-    time_elapsed_gd_CELL ... 
-    acc_hist_gd_CELL ...
+    acc_train_gd_CELL ...
     acc_test_gd_CELL ...
     ...    
-    theta_opt_adagrad_CELL ...  
-    obj_hist_adagrad_CELL ...
-    time_elapsed_adagrad_CELL ... 
-    acc_hist_adagrad_CELL ... 
+    acc_train_adagrad_CELL ... 
     acc_test_adagrad_CELL ...
     ...
-    theta_opt_rmsprop_CELL ...
-    obj_hist_rmsprop_CELL ...
-    time_elapsed_rmsprop_CELL ...
-    acc_hist_rmsprop_CELL ...
+    acc_train_rmsprop_CELL ...
     acc_test_rmsprop_CELL 
 end
 

@@ -41,7 +41,11 @@ run('run_all_algorithms_TB_nonconvex_SVM.m');
 run('run_liblinear_TB_convex_SVM.m');
 
 % Display results in a table
-run('display_results_in_table_SVM.m');
+fprintf('------------------------------------------------------------------- \n');
+fprintf('Summary of Results for SVM and TB Dataset                           \n');
+fprintf('------------------------------------------------------------------- \n');
+filename='results_TB_convex_svm';
+display_results_in_table(filename);
 
 fprintf('Press any key to continue to logistic regression \n');
 pause
@@ -61,4 +65,8 @@ run('run_all_algorithms_TB_nonconvex_LR.m');
 run('run_liblinear_TB_convex_LR.m');
 
 % Display results in a table
-run('display_results_in_table_LR.m');
+fprintf('------------------------------------------------------------------ \n');
+fprintf('Summary of Results for Logistic Regression and TB Dataset          \n');
+fprintf('------------------------------------------------------------------ \n');
+filename='results_TB_nonconvex_LR';
+display_results_in_table(fileneame);
