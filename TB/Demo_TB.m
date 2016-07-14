@@ -14,15 +14,37 @@ clc
 run('../Algorithms/liblinear-1.96/matlab/make.m');
 
 % compile MinFunc package for convex optimization by Mark Schmidt
-run('../Algorithms/Mark Schmidt Code/mexAll.m'); 
+run('../Algorithms/Mark-Schmidt-Code/mexAll.m'); 
 
 % compile our mex files for the proposed algorithm
-run('../Algorithms/mex functions/nonconvex svm pmm cg/compile_mex.m');
-run('../Algorithms/mex functions/nonconvex logistic regression pmm cg/compile_mex.m');
+run('../Algorithms/mex-functions/nonconvex-svm-pmm-cg/compile_mex.m');
+run('../Algorithms/mex-functions/nonconvex-logistic-regression-pmm-cg/compile_mex.m');
 
 
 % Path to algorithms
 addpath(genpath('../Algorithms')); %
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%% Load Dataset %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% assemble parts of dataset into one %
+load TB_dataset_hiv_class_X_test_part1.mat X_test1;
+load TB_dataset_hiv_class_X_test_part2.mat X_test2;
+load TB_dataset_hiv_class_X_val_part1.mat X_val1;
+load TB_dataset_hiv_class_X_val_part2.mat X_val2;
+load TB_dataset_hiv_class_X_train_part1.mat X_train1;
+load TB_dataset_hiv_class_X_train_part2.mat X_train2;
+load TB_dataset_hiv_class_X_train_part3.mat X_train3;
+load TB_dataset_hiv_class_X_train_part4.mat X_train4;
+load TB_dataset_hiv_class_X_train_part5.mat X_train5;
+load TB_dataset_hiv_class_y y_train y_val y_test;
+
+X_train=[X_train1 X_train2 X_train3 X_train4 X_train5];
+X_test=[X_test1 X_test2];
+X_val=[X_val1 X_val2];
+
+% merge validation and training into one big training set
+X_train = [X_train; X_val]; 
+y_train = [y_train; y_val];
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% run algorithms %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -46,6 +68,7 @@ fprintf('Summary of Results for SVM and TB Dataset                           \n'
 fprintf('------------------------------------------------------------------- \n');
 filename='results_TB_convex_svm';
 display_results_in_table(filename);
+fprintf('Note: LIBLINEAR is for the convex SVM and the rest are for the nonconvex sigmoid-loss SVM \n');
 
 fprintf('Press any key to continue to logistic regression \n');
 pause
@@ -69,4 +92,5 @@ fprintf('------------------------------------------------------------------ \n')
 fprintf('Summary of Results for Logistic Regression and TB Dataset          \n');
 fprintf('------------------------------------------------------------------ \n');
 filename='results_TB_nonconvex_LR';
-display_results_in_table(fileneame);
+display_results_in_table(filename);
+fprintf('Note: LIBLINEAR is for the quadratic penalty and the rest are for the nonconvex log penalty \n');
