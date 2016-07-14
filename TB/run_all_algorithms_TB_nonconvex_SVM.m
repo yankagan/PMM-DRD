@@ -8,19 +8,6 @@ rng('default');
 
 disp('Now Running Algorithms for SVM (LIBLINEAR for Hinge-Loss SVM and the rest for Sigmoid-Loss SVM)');
 
-% Load data %
-load TB_dataset_hiv_class.mat y_train X_train y_test X_test y_val X_val
-
-% merge validation and training into one big training set
-X_train = [X_train; X_val]; 
-y_train = [y_train; y_val];
-
-% number of examples
-n = size(X_train, 1);
-
-% Append a vector of 1s to X_train for the bias term  
-X_train = [X_train, ones(n, 1)];
-p = size(X_train, 2);
  
 % To be used for initialization 
 Xy_train = bsxfun(@times,X_train,y_train); 
@@ -96,8 +83,7 @@ fprintf('------------------------------------------------- \n');
 % Trust Region
 disp('Starting PMM ...');
 options.display = 0;
-[theta_opt_pmm_cg, obj_hist_pmm_cg, time_elapsed_pmm_cg] = ...
-    nonconvex_svm_PMM_CG(X_train, y_train, theta_0, lambda, sc, num_grp, param_ord, c_f, i_f, options);
+[theta_opt_pmm_cg, obj_hist_pmm_cg, time_elapsed_pmm_cg] = nonconvex_svm_PMM_CG(X_train, y_train, theta_0, lambda, sc, num_grp, param_ord, c_f, i_f, options);
 acc_test_pmm_cg = linear_classification_accuracy(X_test, y_test, theta_opt_pmm_cg);
 acc_train_pmm_cg = linear_classification_accuracy(X_train(:,1:end-1), y_train, theta_opt_pmm_cg);
 acc_train_pmm_cg_CELL{ind_init}=acc_train_pmm_cg;

@@ -46,6 +46,14 @@ X_val=[X_val1 X_val2];
 X_train = [X_train; X_val]; 
 y_train = [y_train; y_val];
 
+
+% number of examples
+n = size(X_train, 1);
+
+% Append a vector of 1s to X_train for the bias term  
+X_train = [X_train, ones(n, 1)];
+p = size(X_train, 2); % number of features
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% run algorithms %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %%%%%%%%%%%% Support Vector Machines %%%%%%%%%%%%%%%%%%%%

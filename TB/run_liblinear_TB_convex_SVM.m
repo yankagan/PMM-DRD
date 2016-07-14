@@ -4,14 +4,7 @@
 % the best set of regularization parameter based on a grid search for
 % LIBLINEAR
 
-% Cross validation parameters
-log10_l_min = -13; 
-log10_l_max = 13; 
-num_l = log10_l_max - log10_l_min + 1;
-
 fprintf('Running Liblinear for SVM \n');
-
-load TB_dataset_hiv_class.mat y_train X_train y_val X_val y_test X_test
 
 tol_opt = 1e-4;
 
@@ -20,7 +13,7 @@ lam_best = 0.001;
 % Train 
 options_liblin = ['-q -s 1 -c ', num2str(lam_best) '-e ' num2str(tol_opt)];
 t = tic;
-model = train([y_train; y_val], [X_train; X_val], options_liblin);
+model = train(y_train, X_train, options_liblin);
 train_time = toc(t);
 
 % Classification accuracy on training data

@@ -7,8 +7,6 @@
 
 fprintf('Running Liblinear for Logistic Regression \n');
 
-load TB_dataset_hiv_class.mat y_train X_train y_val X_val y_test X_test
-
 tol_opt = 1e-4;
 
 lam_best = 0.2;
@@ -16,7 +14,7 @@ lam_best = 0.2;
 % Train 
 options_liblin = ['-q -s 6 -c ', num2str(lam_best) '-e ' num2str(tol_opt)];
 t = tic;
-model = train([y_train; y_val], [X_train; X_val], options_liblin);
+model = train(y_train, X_train, options_liblin);
 train_time = toc(t);
 
 % Classification accuracy on training data
