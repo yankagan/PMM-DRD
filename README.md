@@ -17,8 +17,8 @@ References
 
 How to Run the Code
 --------------------
-Open MATLAB and run Demo_TB.m from the TB folder. It will compile the C++ mex files during the first run.
-Tested on Linux and Windows machines running MATLAB 8.4. 
+Open MATLAB and run Demo_TB.m from the TB folder. It will compile all the necessary C++ mex files.
+Tested on Linux and Windows machines running MATLAB 8.2 and 8.6.
 
 Comments
 ---------
